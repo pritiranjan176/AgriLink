@@ -1,7 +1,7 @@
-import {Config} from '../../Utility/Constants/Config';
-import {Actions, ActionConst} from "react-native-router-flux";
-import {AsyncStorage} from 'react-native';
-import {Alert} from 'react-native';
+import { Config } from '../../Utility/Constants/Config';
+import { Actions, ActionConst } from "react-native-router-flux";
+import { AsyncStorage } from 'react-native';
+import { Alert } from 'react-native';
 import LocalStorage from '../../Utility/Constants/LocalStorage';
 
 class ApiAccess {
@@ -37,14 +37,14 @@ class ApiAccess {
         let tk = await LocalStorage.getToken()
 
         const url = `${Config.BASE_URL + api_path}`;
-        let options = Object.assign({method: 'GET'}, null);
+        let options = Object.assign({ method: 'GET' }, null);
         options.headers = ApiAccess.headers_get(tk);
         return fetch(url, options).then(resp => {
 
             if (resp.status == 401) {
 
                 this.func_clearStorage()
-                Actions.LoginComponent({type: ActionConst.RESET})
+                Actions.LoginComponent({ type: ActionConst.RESET })
                 alert("Session has expired");
                 return;
             } else if (resp.status === 500) {
@@ -52,9 +52,9 @@ class ApiAccess {
                     "Ohoo!",
                     "Internal server error.!",
                     [
-                        {text: 'OK', onPress: () => Actions.pop()},
+                        { text: 'OK', onPress: () => Actions.pop() },
                     ],
-                    {cancelable: false}
+                    { cancelable: false }
                 );
             }
 
@@ -78,7 +78,7 @@ class ApiAccess {
     static async get(api_path, params) {
         let url = `${Config.BASE_URL + api_path}`;
         let formBody = [];
-
+        debugger
         // Here we convert params to formBody format and store at fromBody list
         if (params !== null) {
             url = `${Config.BASE_URL + api_path}`;
@@ -90,17 +90,17 @@ class ApiAccess {
             formBody = formBody.join("&");
         }
 
-        let options = Object.assign({method: 'GET'}, params ? {body: formBody} : null);
+        let options = Object.assign({ method: 'GET' }, params ? { body: formBody } : null);
 
         options.headers = null
-
+        debugger
 
         //debugger;
         return fetch(url, options).then(resp => {
             if (resp.status == 401) {
 
                 this.func_clearStorage()
-                Actions.LoginComponent({type: ActionConst.RESET})
+                Actions.LoginComponent({ type: ActionConst.RESET })
                 alert("Session has expired");
                 return;
             } else if (resp.status === 500) {
@@ -108,9 +108,9 @@ class ApiAccess {
                     "Ohoo!",
                     "Internal server error.!",
                     [
-                        {text: 'OK', onPress: () => Actions.pop()},
+                        { text: 'OK', onPress: () => Actions.pop() },
                     ],
-                    {cancelable: false}
+                    { cancelable: false }
                 );
             }
 
@@ -128,31 +128,34 @@ class ApiAccess {
             });
     }
 
-// Calling for POST method
+    // Calling for POST method
     static post(api_path, params) {
-        //debugger;
+        debugger;
         let url = `${Config.BASE_URL + api_path}`;
         let formBody = [];
-
+        debugger;
         // Here we convert params to formBody format and store at fromBody list
         if (params !== null) {
             url = `${Config.BASE_URL + api_path}`;
             for (let property in params) {
                 let encodedKey = encodeURIComponent(property);
                 let encodedValue = encodeURIComponent(params[property]);
-                formBody.push(encodedKey + "=" + encodedValue);
+                var data = {encodedKey:encodedValue}
+                formBody.append(data)
+                // formBody.push(encodedKey + "=" + encodedValue);
             }
-            formBody = formBody.join("&");
+            // formBody = formBody.join("&");
         }
+        debugger;
 
-        let options = Object.assign({method: 'POST'}, params ? {body: formBody} : null);
+        let options = Object.assign({ method: 'POST' }, params ? { body: formBody } : null);
 
 
         //as params are being sent as rawdata
-        options.body = JSON.stringify(params)
+        // options.body = JSON.stringify(params)
         options.headers = ApiAccess.headers_post()
 
-        //debugger;
+        debugger;
         return fetch(url, options).then(resp => {
             let list = resp._bodyText
             let json = resp.json();
@@ -186,7 +189,7 @@ class ApiAccess {
             formBody = formBody.join("&");
         }
 
-        let options = Object.assign({method: 'POST'}, params ? {body: formBody} : null);
+        let options = Object.assign({ method: 'POST' }, params ? { body: formBody } : null);
         options.headers = ApiAccess.headers_postWithAuth(tk);
 
         //as params are being sent as rawdata
@@ -198,7 +201,7 @@ class ApiAccess {
             if (resp.status == 401) {
 
                 this.func_clearStorage()
-                Actions.LoginComponent({type: ActionConst.RESET})
+                Actions.LoginComponent({ type: ActionConst.RESET })
                 alert("Session has expired");
                 return;
             } else if (resp.status === 500) {
@@ -206,9 +209,9 @@ class ApiAccess {
                     "Ohoo!",
                     "Internal server error.!",
                     [
-                        {text: 'OK', onPress: () => Actions.pop()},
+                        { text: 'OK', onPress: () => Actions.pop() },
                     ],
-                    {cancelable: false}
+                    { cancelable: false }
                 );
             }
             let list = resp._bodyText
@@ -228,7 +231,7 @@ class ApiAccess {
 
     static postForAuth(api_path, params) {
         debugger;
-        let options = Object.assign({method: "POST"});
+        let options = Object.assign({ method: "POST" });
 
         options.headers = {
 
@@ -245,7 +248,7 @@ class ApiAccess {
             if (resp.status == 401) {
 
                 this.func_clearStorage()
-                Actions.LoginComponent({type: ActionConst.RESET})
+                Actions.LoginComponent({ type: ActionConst.RESET })
                 alert("Session has expired");
                 return;
             } else if (resp.status === 500) {
@@ -253,9 +256,9 @@ class ApiAccess {
                     "Ohoo!",
                     "Internal server error.!",
                     [
-                        {text: 'OK', onPress: () => Actions.pop()},
+                        { text: 'OK', onPress: () => Actions.pop() },
                     ],
-                    {cancelable: false}
+                    { cancelable: false }
                 );
             } else if (resp.status === 400) {
                 //  throw new Error('User id or password not match')
@@ -303,7 +306,7 @@ class ApiAccess {
             formBody = formBody.join("&");
         }
 
-        let options = Object.assign({method: 'PUT'}, params ? {body: formBody} : null);
+        let options = Object.assign({ method: 'PUT' }, params ? { body: formBody } : null);
         options.headers = ApiAccess.headers_postWithAuth(tk);
 
         //as params are being sent as rawdata
@@ -314,7 +317,7 @@ class ApiAccess {
         return fetch(url, options).then(resp => {
             if (resp.status == 401) {
                 this.func_clearStorage()
-                Actions.LoginComponent({type: ActionConst.RESET})
+                Actions.LoginComponent({ type: ActionConst.RESET })
                 alert("Session has expired");
                 return;
             } else if (resp.status === 500) {
@@ -322,9 +325,9 @@ class ApiAccess {
                     "Ohoo!",
                     "Internal server error.!",
                     [
-                        {text: 'OK', onPress: () => Actions.pop()},
+                        { text: 'OK', onPress: () => Actions.pop() },
                     ],
-                    {cancelable: false}
+                    { cancelable: false }
                 );
             }
             let list = resp._bodyText
@@ -350,14 +353,14 @@ class ApiAccess {
         let tk = await LocalStorage.getToken()
 
         const url = `${Config.BASE_URL + api_path}`;
-        let options = Object.assign({method: 'DELETE'}, null);
+        let options = Object.assign({ method: 'DELETE' }, null);
         options.headers = ApiAccess.headers_get(tk);
         return fetch(url, options).then(resp => {
 
             if (resp.status == 401) {
 
                 this.func_clearStorage()
-                Actions.LoginComponent({type: ActionConst.RESET})
+                Actions.LoginComponent({ type: ActionConst.RESET })
                 alert("Session has expired");
                 return;
             } else if (resp.status === 500) {
@@ -365,9 +368,9 @@ class ApiAccess {
                     "Ohoo!",
                     "Internal server error.!",
                     [
-                        {text: 'OK', onPress: () => Actions.pop()},
+                        { text: 'OK', onPress: () => Actions.pop() },
                     ],
-                    {cancelable: false}
+                    { cancelable: false }
                 );
             }
 
@@ -386,72 +389,72 @@ class ApiAccess {
     }
 
     //     // Calling for PUT method
-//     static put(route, params) {
-//         return this.xhr(route, params, 'PUT');
-//     }
+    //     static put(route, params) {
+    //         return this.xhr(route, params, 'PUT');
+    //     }
 
-//     // Calling for DELETE method
-//     static delete(route, params) {
-//         return this.xhr(route, params, 'DELETE');
-//     }
+    //     // Calling for DELETE method
+    //     static delete(route, params) {
+    //         return this.xhr(route, params, 'DELETE');
+    //     }
 
-//     static callingApi(api_path, params, verb) {
-//         const url = `${Config.BASE_URL + api_path}`;
-//         let options = Object.assign({method: verb}, params ? {body: JSON.stringify(params)} : null);
+    //     static callingApi(api_path, params, verb) {
+    //         const url = `${Config.BASE_URL + api_path}`;
+    //         let options = Object.assign({method: verb}, params ? {body: JSON.stringify(params)} : null);
 
-//         return fetch(url, options).then(resp => {
-//             let list = resp._bodyText
-//             let json = resp.json();
-//             if (resp.ok) {
-//                 return json
-//             }
-//             return json.then(err => {
-//                 throw err
-//             });
-//         });
+    //         return fetch(url, options).then(resp => {
+    //             let list = resp._bodyText
+    //             let json = resp.json();
+    //             if (resp.ok) {
+    //                 return json
+    //             }
+    //             return json.then(err => {
+    //                 throw err
+    //             });
+    //         });
 
-//     }
+    //     }
 
-//     static callingApiWith_Auth(api_path, params, verb) {
-// debugger;
-//         let url = `${Config.BASE_URL + api_path}`;
-//         let formBody = [];
+    //     static callingApiWith_Auth(api_path, params, verb) {
+    // debugger;
+    //         let url = `${Config.BASE_URL + api_path}`;
+    //         let formBody = [];
 
-//         // Here we convert params to formBody format and store at fromBody list
-//         if (params !== null) {
-//             // url = `${Config.BASE_URL_POST + api_path}`;
-//             for (let property in params) {
-//                 let encodedKey = encodeURIComponent(property);
-//                 let encodedValue = encodeURIComponent(params[property]);
-//                 formBody.push(encodedKey + "=" + encodedValue);
-//             }
-//             formBody = formBody.join("&");
-//         }
+    //         // Here we convert params to formBody format and store at fromBody list
+    //         if (params !== null) {
+    //             // url = `${Config.BASE_URL_POST + api_path}`;
+    //             for (let property in params) {
+    //                 let encodedKey = encodeURIComponent(property);
+    //                 let encodedValue = encodeURIComponent(params[property]);
+    //                 formBody.push(encodedKey + "=" + encodedValue);
+    //             }
+    //             formBody = formBody.join("&");
+    //         }
 
-//         let options = Object.assign({method: verb}, params ? {body: formBody} : null);
+    //         let options = Object.assign({method: verb}, params ? {body: formBody} : null);
 
 
-//         if (params !== null) {
+    //         if (params !== null) {
 
-//             options.headers = ApiAccess.headers_post();
-//             options.headers = null
-//         } else {
-//             options.headers = ApiAccess.headers_get();
-//         }
+    //             options.headers = ApiAccess.headers_post();
+    //             options.headers = null
+    //         } else {
+    //             options.headers = ApiAccess.headers_get();
+    //         }
 
-//         //debugger;
-//         return fetch(url, options).then(resp => {
-//             let list = resp._bodyText
-//             let json = resp.json();
-//             if (resp.ok) {
-//                 return json
-//             }
-//             return json.then(err => {
-//                 throw err
-//             });
-//         });
+    //         //debugger;
+    //         return fetch(url, options).then(resp => {
+    //             let list = resp._bodyText
+    //             let json = resp.json();
+    //             if (resp.ok) {
+    //                 return json
+    //             }
+    //             return json.then(err => {
+    //                 throw err
+    //             });
+    //         });
 
-//     }
+    //     }
 }
 
 export default ApiAccess;
